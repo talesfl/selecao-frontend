@@ -2,14 +2,14 @@
 
     <span>Benefício servidor</span>
 
-    <button mat-stroked-button [routerLink]="['processos']">Processos</button>
+    <button mat-stroked-button [routerLink]="['processo']">Processo</button>
     
     <button mat-stroked-button [matMenuTriggerFor]="cadastros">Cadastros</button>
     <mat-menu #cadastros="matMenu">
-        <button mat-menu-item [routerLink]="['cadastros/orgao']">Orgão</button>
-        <button mat-menu-item [routerLink]="['cadastros/beneficio']">Benefício</button>
-        <button mat-menu-item [routerLink]="['cadastros/categoria-documento']">Categoria de documento</button>
-        <button mat-menu-item [routerLink]="['cadastros/servidor']">Servidor</button>
+        <button mat-menu-item [routerLink]="['orgao']">Orgão</button>
+        <button mat-menu-item [routerLink]="['beneficio']">Benefício</button>
+        <button mat-menu-item [routerLink]="['categoria-documento']">Categoria de documento</button>
+        <button mat-menu-item [routerLink]="['servidor']">Servidor</button>
     </mat-menu>
 
 </mat-toolbar>
