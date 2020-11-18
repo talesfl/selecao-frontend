@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { OrgaoRoutingModule } from './orgao-routing.module';
 import { OrgaoComponent } from './orgao.component';
@@ -10,7 +11,8 @@ import { MaterialModule } from '../material/material.module';
   imports: [
     CommonModule,
     OrgaoRoutingModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule
   ]
 })
 export class OrgaoModule { }

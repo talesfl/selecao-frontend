@@ -1,71 +1,80 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
+import { MatTableDataSource } from '@angular/material/table';
 
+import { Orgao } from '../dominio/orgao';
+import { Subscription } from 'rxjs';
 
-//
-
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatTableDataSource} from '@angular/material/table';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
+const ELEMENT_DATA: Orgao[] = [
+  { id: 1, nome: 'Hydrogen', descricao: 'H' },
+  { id: 2, nome: 'Helium', descricao: 'He' },
 ];
-
-//
 
 @Component({
   selector: 'app-orgao',
   templateUrl: './orgao.component.html',
   styleUrls: ['./orgao.component.scss']
 })
-export class OrgaoComponent implements OnInit {
+export class OrgaoComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  selected: Orgao;
+  formGroup: FormGroup;
+  displayedColumns: string[] = ['id', 'nome', 'descricao'];
+
+  dataSource = new MatTableDataSource<Orgao>(ELEMENT_DATA);
+
+  private readonly _SINGLE_SELECTION: boolean = false;
+  selection = new SelectionModel<Orgao>(this._SINGLE_SELECTION, null, true);
+  private selectionChangeSubscription: Subscription;
+
+  constructor(
+    private formBuilder: FormBuilder
+  ) {
+    this.formGroup = this.formBuilder.group({
+      id: [null],
+      nome: [null],
+      descricao: [null],
+    });
+  }
 
   ngOnInit(): void {
+    this.selectionChangeSubscription = this._subscribeToselectionChange();
   }
 
-  //
-  displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  selection = new SelectionModel<PeriodicElement>(true, []);
-
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+  ngOnDestroy(): void {
+    this.selectionChangeSubscription.unsubscribe();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+  private _subscribeToselectionChange(): Subscription {
+    return this.selection.changed.subscribe((change: SelectionChange<Orgao>) => {
+      if (change.removed.includes(this.selected)) {
+        this.selected = null;
+      }
+
+      if (!change.added.includes(this.selected)) {
+        this.selected = change.added[0];
+      }
+
+      this._patchValueIfSelectedOrReset();
+    });
   }
 
-  /** The label for the checkbox on the passed row */
-  checkboxLabel(row?: PeriodicElement): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+  private _patchValueIfSelectedOrReset(): void {
+    if (this.selected) {
+      this.formGroup.patchValue(this.selected);
+    } else {
+      this.formGroup.reset();
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-  //
 
+  public salvarOuAtualizar(): void {
+    // TODO
+  }
+
+  public limpar(): void {
+    this.formGroup.reset();
+    this.selected = null;
+    this.selection.clear();
+  }
 }
