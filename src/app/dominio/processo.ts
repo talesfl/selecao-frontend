@@ -6,7 +6,7 @@ export class Processo {
     servidorId: number;
     beneficioId: number;
 
-    constructor(processo: Partial<Processo>) {
+    constructor(processo?: Partial<Processo>) {
         Object.assign(this, processo);
     }
 }

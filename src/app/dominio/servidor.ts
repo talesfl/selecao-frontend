@@ -4,7 +4,7 @@ export class Servidor {
     cpf: number;
     nome: string;
 
-    constructor(servidor: Partial<Servidor>) {
+    constructor(servidor?: Partial<Servidor>) {
         Object.assign(this, servidor);
     }
 }

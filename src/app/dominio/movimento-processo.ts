@@ -6,7 +6,7 @@ export class MovimentoProcesso {
     usuario: number;
     processoId: number;
 
-    constructor(movimento: Partial<MovimentoProcesso>) {
+    constructor(movimento?: Partial<MovimentoProcesso>) {
         Object.assign(this, movimento);
     }
 }

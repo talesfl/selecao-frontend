@@ -3,7 +3,7 @@ export class Orgao {
     nome: string;
     descricao: string;
 
-    constructor(orgao: Partial<Orgao>) {
+    constructor(orgao?: Partial<Orgao>) {
         Object.assign(this, orgao);
     }
 }

@@ -7,7 +7,7 @@ export class Documento {
     categoriaId: number;
     processoId: number;
 
-    constructor(Documento: Partial<Documento>) {
-        Object.assign(this, Documento);
+    constructor(documento?: Partial<Documento>) {
+        Object.assign(this, documento);
     }
 }

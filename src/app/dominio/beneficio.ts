@@ -3,7 +3,7 @@ export class Beneficio {
     nome: string;
     descricao: string;
 
-    constructor(beneficio: Partial<Beneficio>) {
+    constructor(beneficio?: Partial<Beneficio>) {
         Object.assign(this, beneficio);
     }
 }

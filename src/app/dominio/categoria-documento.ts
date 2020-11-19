@@ -3,7 +3,7 @@ export class CategoriaDocumento {
     nome: string;
     descricao: string;
 
-    constructor(categoria: Partial<CategoriaDocumento>) {
+    constructor(categoria?: Partial<CategoriaDocumento>) {
         Object.assign(this, categoria);
     }
 }
