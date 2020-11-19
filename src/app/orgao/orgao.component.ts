@@ -1,16 +1,18 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
-import { MatTableDataSource } from '@angular/material/table';
-
-import { Orgao } from '../dominio/orgao';
-import { Observable, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { OrgaoService } from '../service/orgao.service';
 import { ActivatedRoute } from '@angular/router';
-import { Page } from '../dominio/page';
-import { MessageService } from '../service/message.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { switchMap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+
+import { Page } from '../dominio/page';
+import { Orgao } from '../dominio/orgao';
+
+import { OrgaoService } from '../service/orgao.service';
+import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-orgao',
@@ -69,13 +71,13 @@ export class OrgaoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private initDataFromResolver(): void {
     if (this.activatedRoute.snapshot?.data?.page) {
-      const orgaos: Page<Orgao> = this.activatedRoute.snapshot.data.page;
-      this.createDataSource(orgaos);
+      const page: Page<Orgao> = this.activatedRoute.snapshot.data.page;
+      this.createDataSource(page);
     }
   }
 
-  private createDataSource(orgaos: Page<Orgao>): void {
-    this.dataSource = new MatTableDataSource<Orgao>(orgaos.content);
+  private createDataSource(page: Page<Orgao>): void {
+    this.dataSource = new MatTableDataSource<Orgao>(page.content);
     this.dataSource.paginator = this.paginator;
   }
 
@@ -111,8 +113,8 @@ export class OrgaoComponent implements OnInit, AfterViewInit, OnDestroy {
 
     observable.pipe(
       switchMap(() => this.orgaoService.findByNomeStartingWith())
-    ).subscribe((orgaos: Page<Orgao>) => {
-      this.createDataSource(orgaos);
+    ).subscribe((page: Page<Orgao>) => {
+      this.createDataSource(page);
       this.limpar();
     },
       () => {
