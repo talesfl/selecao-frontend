@@ -24,8 +24,7 @@ export class BeneficioComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTableDataSource<Beneficio>(ELEMENT_DATA);
 
-  private readonly _SINGLE_SELECTION: boolean = false;
-  selection = new SelectionModel<Beneficio>(this._SINGLE_SELECTION, null, true);
+  selection = new SelectionModel<Beneficio>(false, null, true);
   private selectionChangeSubscription: Subscription;
 
   constructor(
