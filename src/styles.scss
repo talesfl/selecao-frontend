@@ -54,3 +54,11 @@ mat-toolbar {
 .width-30-pc {
     width: 30%;
 }
+
+table {
+    width: 100%;
+
+    .table-row-selected{
+        background-color: #eeeeee;
+    }
+}
