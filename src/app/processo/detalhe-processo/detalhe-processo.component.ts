@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Processo } from 'src/app/dominio/processo';
 
 @Component({
   selector: 'app-detalhe-processo',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalheProcessoComponent implements OnInit {
 
+  @Input() processo: Processo;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  public tabsDisabled(): boolean {
+    return !this.processo;
   }
 
 }

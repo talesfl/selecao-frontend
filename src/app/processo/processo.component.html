@@ -9,24 +9,19 @@
     <button mat-stroked-button (click)="novoProcesso()" class="toolbar-btn">
       Novo processo
     </button>
-
-    <button mat-stroked-button 
-      [disabled]="buttonMovimentarProcesssoDisabled()" 
-      (click)="movimentarProcesso()"
-      class="toolbar-btn">
-        Movimentar processo
-    </button>
-
   </div>
 
   <div class="content">
     <div class="processo-content">
       <app-lista-processo 
-        class="flex-grow-0-5" 
+        class="flex-grow-0-5 margin-right-12px" 
         (processoSelectedChange)="selected = $event">
       </app-lista-processo>
       
-      <app-detalhe-processo class="flex-grow-1"></app-detalhe-processo>
+      <app-detalhe-processo 
+        [processo]="selected" 
+        class="flex-grow-1 margin-left-12px">
+      </app-detalhe-processo>
     </div>
   </div>
 

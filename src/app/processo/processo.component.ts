@@ -34,11 +34,4 @@ export class ProcessoComponent implements OnInit {
       }
     });
   }
-
-  public movimentarProcesso(): void { }
-
-  public buttonMovimentarProcesssoDisabled(): boolean {
-    return !this.selected;
-  }
-
 }

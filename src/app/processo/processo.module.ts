@@ -15,6 +15,8 @@ import { DialogNovoProcessoComponent } from './dialog-novo-processo/dialog-novo-
 import { MessageService } from '../service/message.service';
 import { BeneficioService } from '../service/beneficio.service';
 import { ServidorService } from '../service/servidor.service';
+import { DocumentoProcessoComponent } from './detalhe-processo/documento-processo/documento-processo.component';
+import { MovimentacaoProcessoComponent } from './detalhe-processo/movimentacao-processo/movimentacao-processo.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { ServidorService } from '../service/servidor.service';
     ProcessoComponent,
     ListaProcessoComponent,
     DetalheProcessoComponent,
-    DialogNovoProcessoComponent
+    DialogNovoProcessoComponent,
+    DocumentoProcessoComponent,
+    MovimentacaoProcessoComponent
   ],
   imports: [
     CommonModule,
