@@ -1,55 +1,58 @@
 <div class="container">
 
-    <div class="component-toolbar">
-    
-      <span>Benefício</span>
-    
-      <form [formGroup]="formGroup" class="toolbar-form">
-        <mat-form-field>
-          <mat-label>Nome</mat-label>
-          <input matInput formControlName="nome">
-        </mat-form-field>
-    
-        <mat-form-field>
-          <mat-label>Descrição</mat-label>
-          <input matInput formControlName="descricao">
-        </mat-form-field>
-      </form>
-    
-      <button mat-stroked-button (click)="salvarOuAtualizar()" class="toolbar-btn">{{selected?.id ? 'Editar' : 'Adicionar'}}</button>
-      <button mat-stroked-button (click)="limpar()" class="toolbar-btn">Limpar</button>
-    
-    </div>
+  <div class="component-toolbar">
   
-    <div class="content">
+    <span>Benefício</span>
   
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <form [formGroup]="formGroup" class="toolbar-form">
+      <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome">
+      </mat-form-field>
   
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> Id </th>
-          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-        </ng-container>
+      <mat-form-field>
+        <mat-label>Descrição</mat-label>
+        <input matInput formControlName="descricao">
+      </mat-form-field>
+    </form>
   
-        <ng-container matColumnDef="nome">
-          <th mat-header-cell *matHeaderCellDef> Nome </th>
-          <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
-        </ng-container>
-  
-        <ng-container matColumnDef="descricao">
-          <th mat-header-cell *matHeaderCellDef> Descrição </th>
-          <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
-        </ng-container>
-  
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  
-        <tr 
-          mat-row 
-          *matRowDef="let row; columns: displayedColumns;" 
-          (click)="this.selection.toggle(row)"
-          [class.table-row-selected]="this.selection.isSelected(row)">
-        </tr>
-      </table>
-  
-    </div>
+    <button mat-stroked-button (click)="salvarOuAtualizar()" class="toolbar-btn">{{selected?.id ? 'Editar' : 'Adicionar'}}</button>
+    <button mat-stroked-button (click)="limpar()" class="toolbar-btn">Limpar</button>
   
   </div>
+
+  <div class="content">
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef class="width-10-pc"> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef class="width-30-pc"> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="descricao">
+        <th mat-header-cell *matHeaderCellDef> Descrição </th>
+        <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <tr 
+        mat-row 
+        *matRowDef="let row; columns: displayedColumns;" 
+        (click)="this.selection.toggle(row)"
+        [class.table-row-selected]="this.selection.isSelected(row)">
+      </tr>
+    </table>
+
+    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10]"> </mat-paginator>
+
+
+  </div>
+
+</div>

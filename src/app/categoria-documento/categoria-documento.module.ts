@@ -5,6 +5,9 @@ import { CategoriaDocumentoRoutingModule } from './categoria-documento-routing.m
 import { CategoriaDocumentoComponent } from './categoria-documento.component';
 import { MaterialModule } from '../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CategoriaDocumentoService } from '../service/categoria-documento.service';
+import { CategoriaDocumentoResolver } from '../service/categoria-documento.resolver';
+import { MessageService } from '../service/message.service';
 
 @NgModule({
   declarations: [CategoriaDocumentoComponent],
@@ -13,6 +16,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     CategoriaDocumentoRoutingModule,
     MaterialModule,
     ReactiveFormsModule
+  ],
+  providers: [
+    CategoriaDocumentoService,
+    CategoriaDocumentoResolver,
+    MessageService
   ]
 })
 export class CategoriaDocumentoModule { }

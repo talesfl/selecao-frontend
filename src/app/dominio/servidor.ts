@@ -1,6 +1,8 @@
+import { Orgao } from './orgao';
+
 export class Servidor {
     matricula: number;
-    orgao: number;
+    orgao: Orgao;
     cpf: number;
     nome: string;
 

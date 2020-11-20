@@ -1,48 +1,84 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
+import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
+import { switchMap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+
+import { Page } from '../dominio/page';
 import { Beneficio } from '../dominio/beneficio';
-import { Subscription } from 'rxjs';
 
-const ELEMENT_DATA: Beneficio[] = [
-  { id: 1, nome: 'Hydrogen', descricao: 'H' },
-  { id: 2, nome: 'Helium', descricao: 'He' },
-];
+import { BeneficioService } from '../service/beneficio.service';
+import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-beneficio',
   templateUrl: './beneficio.component.html',
   styleUrls: ['./beneficio.component.scss']
 })
-export class BeneficioComponent implements OnInit, OnDestroy {
+export class BeneficioComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selected: Beneficio;
   formGroup: FormGroup;
   displayedColumns: string[] = ['id', 'nome', 'descricao'];
 
-  dataSource = new MatTableDataSource<Beneficio>(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<Beneficio>([]);
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   selection = new SelectionModel<Beneficio>(false, null, true);
   private selectionChangeSubscription: Subscription;
+  private pageChangeSubscription: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder
+    private activatedRoute: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private beneficioService: BeneficioService,
+    private messageService: MessageService
   ) {
     this.formGroup = this.formBuilder.group({
       id: [null],
       nome: [null],
       descricao: [null],
     });
+
   }
 
   ngOnInit(): void {
     this.selectionChangeSubscription = this._subscribeToselectionChange();
   }
 
+  ngAfterViewInit(): void {
+    this.initDataFromResolver();
+    this.pageChangeSubscription = this.subscribeToPageChangesEvent();
+  }
+
   ngOnDestroy(): void {
     this.selectionChangeSubscription.unsubscribe();
+    this.pageChangeSubscription.unsubscribe();
+  }
+
+  private subscribeToPageChangesEvent(): Subscription {
+    return this.paginator.page.subscribe((event: PageEvent) => {
+      this.beneficioService.findByNomeStartingWith('', {
+        pageNumber: event.pageIndex,
+        pageSize: event.pageSize
+      });
+    });
+  }
+
+  private initDataFromResolver(): void {
+    if (this.activatedRoute.snapshot?.data?.page) {
+      const page: Page<Beneficio> = this.activatedRoute.snapshot.data.page;
+      this.createDataSource(page);
+    }
+  }
+
+  private createDataSource(page: Page<Beneficio>): void {
+    this.dataSource = new MatTableDataSource<Beneficio>(page.content);
+    this.dataSource.paginator = this.paginator;
   }
 
   private _subscribeToselectionChange(): Subscription {
@@ -68,7 +104,22 @@ export class BeneficioComponent implements OnInit, OnDestroy {
   }
 
   public salvarOuAtualizar(): void {
-    // TODO
+    let observable: Observable<Beneficio>;
+    if (this.formGroup.get('id').value) {
+      observable = this.beneficioService.atualizar(this.formGroup.getRawValue());
+    } else {
+      observable = this.beneficioService.salvar(this.formGroup.getRawValue());
+    }
+
+    observable.pipe(
+      switchMap(() => this.beneficioService.findByNomeStartingWith())
+    ).subscribe((page: Page<Beneficio>) => {
+      this.createDataSource(page);
+      this.limpar();
+    },
+      () => {
+        this.messageService.showMessage('Não foi possível salvar/atualizar o registro.');
+      });
   }
 
   public limpar(): void {
@@ -76,4 +127,5 @@ export class BeneficioComponent implements OnInit, OnDestroy {
     this.selected = null;
     this.selection.clear();
   }
+
 }
