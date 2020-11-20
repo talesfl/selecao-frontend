@@ -1,1 +1,35 @@
-<p>documento-processo works!</p>
+<button mat-stroked-button (click)="adicionarDocumento()" class="toolbar-btn margin-btn">
+    Adicionar documento ao processo
+</button>
+
+<ng-container *ngIf="categorias.length > 0 ; else docNotFound">
+
+    <mat-accordion multi>
+
+        <ng-container *ngFor="let categoria of categorias">
+            <mat-expansion-panel>
+
+                <mat-expansion-panel-header>
+                    <mat-panel-title> {{categoria.nome}} </mat-panel-title>
+                    <mat-panel-description> {{categoria.descricao}} </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <mat-list *ngIf="(mapaDocumentoObservable[categoria.id] | async) as documentos">
+                    <mat-list-item *ngFor="let documento of documentos">
+                        <mat-icon mat-list-icon>folder</mat-icon>
+                        <div mat-line> <a (click)="visualizarDocumento(documento.id)">{{documento.nome}}</a> </div>
+                        <div mat-line> {{documento.dataInsercao}} </div>
+                    </mat-list-item>
+                </mat-list>
+
+            </mat-expansion-panel>
+
+        </ng-container>
+
+    </mat-accordion>
+
+</ng-container>
+
+<ng-template #docNotFound>
+    <div>Nenhum documento encontrado.</div>
+</ng-template>

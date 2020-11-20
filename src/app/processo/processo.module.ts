@@ -17,6 +17,8 @@ import { BeneficioService } from '../service/beneficio.service';
 import { ServidorService } from '../service/servidor.service';
 import { DocumentoProcessoComponent } from './detalhe-processo/documento-processo/documento-processo.component';
 import { MovimentacaoProcessoComponent } from './detalhe-processo/movimentacao-processo/movimentacao-processo.component';
+import { CategoriaDocumentoService } from '../service/categoria-documento.service';
+import { DocumentoService } from '../service/documento.service';
 
 
 @NgModule({
@@ -39,7 +41,9 @@ import { MovimentacaoProcessoComponent } from './detalhe-processo/movimentacao-p
     ProcessoResolver,
     MessageService,
     BeneficioService,
-    ServidorService
+    ServidorService,
+    CategoriaDocumentoService,
+    DocumentoService
   ],
 })
 export class ProcessoModule { }

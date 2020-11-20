@@ -1,11 +1,15 @@
 <mat-tab-group animationDuration="0ms">
     
     <mat-tab label="Documentos" [disabled]="tabsDisabled()">
-        Content 1
+        <ng-container *ngIf="!tabsDisabled()">
+            <app-documento-processo [processo]="processo"></app-documento-processo>
+        </ng-container>
     </mat-tab>
     
     <mat-tab label="Movimentações" [disabled]="tabsDisabled()">
-        Content 2
+        <ng-container *ngIf="!tabsDisabled()">
+            <app-movimentacao-processo [processo]="processo"></app-movimentacao-processo>
+        </ng-container>
     </mat-tab>
 
 </mat-tab-group>
