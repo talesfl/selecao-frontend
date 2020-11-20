@@ -1,30 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { Orgao } from '../dominio/orgao';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+
+import { Subscription } from 'rxjs';
+
+import { Page } from '../dominio/page';
 
 import { Servidor } from '../dominio/servidor';
-
-const ELEMENT_DATA: Servidor[] = [
-  { matricula: 1, orgao: new Orgao(), cpf: 11111111111, nome: 'Servidor 1' },
-  { matricula: 2, orgao: new Orgao(), cpf: 22222222222, nome: 'Servidor 2' },
-  { matricula: 3, orgao: new Orgao(), cpf: 33333333333, nome: 'Servidor 3' },
-];
+import { ServidorService } from '../service/servidor.service';
 
 @Component({
   selector: 'app-servidor',
   templateUrl: './servidor.component.html',
   styleUrls: ['./servidor.component.scss']
 })
-export class ServidorComponent implements OnInit {
+export class ServidorComponent implements AfterViewInit, OnDestroy {
 
   selected: Servidor;
   displayedColumns: string[] = ['matricula', 'orgao', 'cpf', 'nome'];
 
-  dataSource = new MatTableDataSource<Servidor>(ELEMENT_DATA);
+  dataSource = new MatTableDataSource<Servidor>([]);
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor() { }
+  private pageChangeSubscription: Subscription;
 
-  ngOnInit(): void {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private servidorService: ServidorService,
+  ) { }
+
+  ngAfterViewInit(): void {
+    this.initDataFromResolver();
+    this.pageChangeSubscription = this.subscribeToPageChangesEvent();
+  }
+
+  ngOnDestroy(): void {
+    this.pageChangeSubscription.unsubscribe();
+  }
+
+  private subscribeToPageChangesEvent(): Subscription {
+    return this.paginator.page.subscribe((event: PageEvent) => {
+      this.servidorService.findByNomeStartingWith('', {
+        pageNumber: event.pageIndex,
+        pageSize: event.pageSize
+      });
+    });
+  }
+
+  private initDataFromResolver(): void {
+    if (this.activatedRoute.snapshot?.data?.page) {
+      const page: Page<Servidor> = this.activatedRoute.snapshot.data.page;
+      this.createDataSource(page);
+    }
+  }
+
+  private createDataSource(page: Page<Servidor>): void {
+    this.dataSource = new MatTableDataSource<Servidor>(page.content);
+    this.dataSource.paginator = this.paginator;
   }
 
 }

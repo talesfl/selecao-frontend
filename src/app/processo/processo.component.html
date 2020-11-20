@@ -1,5 +1,26 @@
 <div class="container">
-    <mat-toolbar>
-        <span>Processos</span>
-    </mat-toolbar>
+
+  <div class="component-toolbar">
+
+    <span>Processo</span>
+
+    <div class="preenchimento"></div>
+
+    <button mat-stroked-button (click)="novoProcesso()" class="toolbar-btn">
+      Novo processo
+    </button>
+
+    <button mat-stroked-button 
+      [disabled]="buttonMovimentarProcesssoDisabled()" 
+      (click)="movimentarProcesso()"
+      class="toolbar-btn">
+        Movimentar processo
+    </button>
+
+  </div>
+
+  <div class="content">
+    
+  </div>
+
 </div>
