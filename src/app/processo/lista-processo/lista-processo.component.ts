@@ -2,9 +2,10 @@ import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { Page } from 'src/app/dominio/page';
 import { Processo } from 'src/app/dominio/processo';
@@ -27,9 +28,12 @@ export class ListaProcessoComponent implements OnInit, AfterViewInit, OnDestroy 
   private selectionChangeSubscription: Subscription;
   private pageChangeSubscription: Subscription;
 
+  @Output() processoSelectedChange = new EventEmitter<Processo>();
+
   constructor(
     private activatedRoute: ActivatedRoute,
-    private processoService: ProcessoService
+    private processoService: ProcessoService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -37,6 +41,7 @@ export class ListaProcessoComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.initDataFromResolver();
     this.pageChangeSubscription = this.subscribeToPageChangesEvent();
   }
@@ -56,33 +61,46 @@ export class ListaProcessoComponent implements OnInit, AfterViewInit, OnDestroy 
         this.selected = change.added[0];
       }
 
+      this.processoSelectedChange.emit(this.selected);
     });
   }
 
   private subscribeToPageChangesEvent(): Subscription {
-    return this.paginator.page.subscribe((event: PageEvent) => {
-      this.processoService.findByNomeStartingWith('', {
+    return this.paginator.page.pipe(
+      switchMap((event: PageEvent) => this.processoService.findByNomeStartingWith('', {
         pageNumber: event.pageIndex,
         pageSize: event.pageSize
-      });
-    });
+      }))
+    ).subscribe((page: Page<Processo>) => this.updateDataSource(page));
   }
 
   private initDataFromResolver(): void {
     if (this.activatedRoute.snapshot?.data?.page) {
       const page: Page<Processo> = this.activatedRoute.snapshot.data.page;
-      this.createDataSource(page);
+      this.updateDataSource(page);
     }
   }
 
-  private createDataSource(page: Page<Processo>): void {
-    this.dataSource = new MatTableDataSource<Processo>(page.content);
-    this.dataSource.paginator = this.paginator;
+  private updateDataSource(page: Page<Processo>): void {
+    this.dataSource.data = page.content;
+    this.paginator.pageIndex = page.number;
+    this.paginator.length = page.totalElements;
+    this.changeDetectorRef.detectChanges();
   }
 
   public limpar(): void {
     this.selected = null;
     this.selection.clear();
+    this.processoSelectedChange.emit(this.selected);
   }
+
+  public resetLista(): void {
+    this.processoService.findByNomeStartingWith()
+      .subscribe((page: Page<Processo>) => {
+        this.updateDataSource(page);
+        this.limpar();
+      });
+  }
+
 
 }

@@ -5,7 +5,7 @@ export class Processo {
     id: number;
     nome: string;
     descricao: string;
-    dataCriacao: Date;
+    dataCriacao: string;
     servidor: Servidor;
     beneficio: Beneficio;
 

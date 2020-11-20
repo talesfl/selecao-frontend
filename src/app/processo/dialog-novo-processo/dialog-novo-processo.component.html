@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>Novo processo</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="formGroup" class="form-flex-column">
+
+        <mat-form-field appearance="fill">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="nome" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Descrição</mat-label>
+            <input matInput formControlName="descricao" required>
+        </mat-form-field>
+
+        <mat-form-field cappearance="fill">
+            <input type="text"
+                   placeholder="Nome servidor"
+                   matInput
+                   [formControl]="formGroup.get('servidor')"
+                   [matAutocomplete]="autoServidor">
+            <mat-autocomplete autoActiveFirstOption #autoServidor="matAutocomplete" [displayWith]="displayServidorFn">
+              <mat-option *ngFor="let option of filteredServidorOptions | async" [value]="option">
+                {{option.nome}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field cappearance="fill">
+            <input type="text"
+                   placeholder="Nome benefício"
+                   matInput
+                   [formControl]="formGroup.get('beneficio')"
+                   [matAutocomplete]="autoBeneficio">
+            <mat-autocomplete autoActiveFirstOption #autoBeneficio="matAutocomplete" [displayWith]="displayBeneficioFn">
+              <mat-option *ngFor="let option of filteredBeneficioOptions | async" [value]="option">
+                {{option.nome}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button 
+    mat-button 
+    (click)="saveAndClose()" 
+    [disabled]="this.formGroup.invalid">Salvar</button>
+</mat-dialog-actions>

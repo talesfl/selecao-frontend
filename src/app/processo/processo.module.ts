@@ -11,13 +11,18 @@ import { DetalheProcessoComponent } from './detalhe-processo/detalhe-processo.co
 
 import { ProcessoService } from '../service/processo.service';
 import { ProcessoResolver } from '../service/processo.resolver';
+import { DialogNovoProcessoComponent } from './dialog-novo-processo/dialog-novo-processo.component';
+import { MessageService } from '../service/message.service';
+import { BeneficioService } from '../service/beneficio.service';
+import { ServidorService } from '../service/servidor.service';
 
 
 @NgModule({
   declarations: [
     ProcessoComponent,
     ListaProcessoComponent,
-    DetalheProcessoComponent
+    DetalheProcessoComponent,
+    DialogNovoProcessoComponent
   ],
   imports: [
     CommonModule,
@@ -27,7 +32,10 @@ import { ProcessoResolver } from '../service/processo.resolver';
   ],
   providers: [
     ProcessoService,
-    ProcessoResolver
-  ]
+    ProcessoResolver,
+    MessageService,
+    BeneficioService,
+    ServidorService
+  ],
 })
 export class ProcessoModule { }
