@@ -1,7 +1,7 @@
 import { Orgao } from './orgao';
 import { Processo } from './processo';
 
-export class MovimentoProcesso {
+export class MovimentacaoProcesso {
     id: number;
     dataTramitacao: Date;
     orgaoOrigem: Orgao;
@@ -9,7 +9,7 @@ export class MovimentoProcesso {
     usuario: number;
     processo: Processo;
 
-    constructor(movimento?: Partial<MovimentoProcesso>) {
+    constructor(movimento?: Partial<MovimentacaoProcesso>) {
         Object.assign(this, movimento);
     }
 }

@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Movimentar processo {{processo.nome}}</h2>
+
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="formGroup" class="form-flex-column">
+
+        <mat-form-field cappearance="fill">
+            <input type="text" placeholder="Orgão origem" matInput [formControl]="formGroup.get('orgaoOrigem')"
+                [matAutocomplete]="autoOrgOrigem">
+            <mat-autocomplete autoActiveFirstOption #autoOrgOrigem="matAutocomplete" [displayWith]="displayOrgaoFn">
+                <mat-option *ngFor="let option of filteredOrgaoOrigemOptions | async" [value]="option">
+                    {{option.nome}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field cappearance="fill">
+            <input type="text" placeholder="OrgaoDestino" matInput [formControl]="formGroup.get('orgaoDestino')"
+                [matAutocomplete]="autoOrgDestino">
+            <mat-autocomplete autoActiveFirstOption #autoOrgDestino="matAutocomplete" [displayWith]="displayOrgaoFn">
+                <mat-option *ngFor="let option of filteredOrgaoDestinoOptions | async" [value]="option">
+                    {{option.nome}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close>Cancelar</button>
+    <button mat-stroked-button (click)="saveAndClose()" [disabled]="this.formGroup.invalid">Movimentar</button>
+</mat-dialog-actions>

@@ -1,1 +1,34 @@
-<p>movimentacao-processo works!</p>
+<button mat-stroked-button (click)="movimentarProcesso()" class="toolbar-btn margin-btn">
+    Movimentar processo
+</button>
+
+<table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef class="width-10-pc"> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataTramitacao">
+        <th mat-header-cell *matHeaderCellDef> Data de movimentação </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataTramitacao}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="orgaoOrigem">
+        <th mat-header-cell *matHeaderCellDef> Orgão de origem </th>
+        <td mat-cell *matCellDef="let element"> {{element.orgaoOrigem?.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="orgaoDestino">
+        <th mat-header-cell *matHeaderCellDef> Orgão de destino </th>
+        <td mat-cell *matCellDef="let element"> {{element.orgaoDestino?.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="usuario">
+        <th mat-header-cell *matHeaderCellDef class="width-10-pc"> Usuário </th>
+        <td mat-cell *matCellDef="let element"> {{element.usuario}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

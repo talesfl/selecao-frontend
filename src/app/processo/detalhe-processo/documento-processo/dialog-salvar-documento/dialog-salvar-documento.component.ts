@@ -39,10 +39,10 @@ export class DialogSalvarDocumentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscribeToCategproaAutocomplete();
+    this.subscribeToCategoriaAutocomplete();
   }
 
-  private subscribeToCategproaAutocomplete(): void {
+  private subscribeToCategoriaAutocomplete(): void {
     this.filteredCategoriaOptions = this.formGroup.get('categoria')
       .valueChanges.pipe(
         startWith(''),
