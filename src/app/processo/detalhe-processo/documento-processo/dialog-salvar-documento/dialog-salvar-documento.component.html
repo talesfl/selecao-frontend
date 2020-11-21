@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Adicionar documento ao processo</h2>
+
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="formGroup" class="form-flex-column">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="nome" required>
+    </mat-form-field>
+
+    <mat-form-field cappearance="fill">
+      <input type="text" placeholder="Categoria documento" matInput [formControl]="formGroup.get('categoria')"
+        [matAutocomplete]="autoCategoria">
+      <mat-autocomplete autoActiveFirstOption #autoCategoria="matAutocomplete" [displayWith]="displayCategoriaFn">
+        <mat-option *ngFor="let option of filteredCategoriaOptions | async" [value]="option">
+          {{option.nome}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <fieldset>
+      <legend>Documento</legend>
+      <input #inputFile (change)="onFileChange($event)" type="file" name="file" accept=".pdf" required>
+    </fieldset>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancelar</button>
+  <button mat-stroked-button (click)="saveAndClose()" [disabled]="this.formGroup.invalid">Adicionar</button>
+</mat-dialog-actions>

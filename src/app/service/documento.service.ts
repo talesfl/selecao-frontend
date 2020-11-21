@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Documento } from '../dominio/documento';
@@ -10,25 +10,31 @@ export class DocumentoService {
 
     constructor(private http: HttpClient) { }
 
-    // public salvar(
-    // 	multipartFile: MultipartFile,
-    // 	categoriaId: number,
-    // 	processoId: number): Observable<Documento> {
-    // 	return this.http.post<Documento>(this.URL, {});
-    // }
+    public salvar(
+        multipartFile: File,
+        categoriaId: number,
+        processoId: number): Observable<Documento> {
 
-    // @GetMapping("{id}")
-    // public ResponseEntity<Resource> findById(@PathVariable String id) {
-    // 	Documento documento = service.findById(id);
-    // 	return ResponseEntity.ok()
-    // 			.contentType(MediaType.parseMediaType(documento.getTipo()))
-    // 			.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + documento.getNome() + "\"")
-    // 			.body(new ByteArrayResource(documento.getConteudo()));
-    // }
+        const headers = new HttpHeaders();
+        headers.append('Content-Type', 'multipart/form-data');
+        headers.append('Accept', 'application/json');
+
+        const formData = new FormData();
+        formData.append('multipartFile', multipartFile, multipartFile.name);
+        formData.append('categoriaId', String(categoriaId));
+        formData.append('processoId', String(processoId));
+
+        return this.http.post<Documento>(this.URL, formData, { headers });
+    }
 
     public findByProcessoIdAndCategoriaId(processoId: number, categoriaId: number): Observable<Documento[]> {
         const urlTemplate = `${this.URL}/processo/${processoId}/categoria/${categoriaId}`;
         return this.http.get<Documento[]>(urlTemplate);
+    }
+
+
+    public findById(id: string): Observable<any> {
+        return this.http.get<any>(`${this.URL}/${id}`);
     }
 
 }

@@ -4,7 +4,7 @@ import { Processo } from './processo';
 export class Documento {
     id: string;
     nome: string;
-    conteudo: Int8Array;
+    conteudo: File;
     tipo: string;
     dataInsercao: Date;
     categoria: CategoriaDocumento;

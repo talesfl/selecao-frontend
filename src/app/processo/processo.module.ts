@@ -19,6 +19,9 @@ import { DocumentoProcessoComponent } from './detalhe-processo/documento-process
 import { MovimentacaoProcessoComponent } from './detalhe-processo/movimentacao-processo/movimentacao-processo.component';
 import { CategoriaDocumentoService } from '../service/categoria-documento.service';
 import { DocumentoService } from '../service/documento.service';
+import { DialogSalvarDocumentoComponent } from './detalhe-processo/documento-processo/dialog-salvar-documento/dialog-salvar-documento.component';
+import { DialogVizualizarDocumentoComponent } from './detalhe-processo/documento-processo/dialog-vizualizar-documento/dialog-vizualizar-documento.component';
+import { SanitizerPipe } from '../pipe/sanitezer.pipe';
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import { DocumentoService } from '../service/documento.service';
     DetalheProcessoComponent,
     DialogNovoProcessoComponent,
     DocumentoProcessoComponent,
-    MovimentacaoProcessoComponent
+    MovimentacaoProcessoComponent,
+    DialogSalvarDocumentoComponent,
+    DialogVizualizarDocumentoComponent,
+    SanitizerPipe
   ],
   imports: [
     CommonModule,

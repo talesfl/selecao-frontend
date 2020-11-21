@@ -1,12 +1,14 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { map, share, takeUntil } from 'rxjs/operators';
 import { CategoriaDocumento } from 'src/app/dominio/categoria-documento';
 import { Documento } from 'src/app/dominio/documento';
 import { Page } from 'src/app/dominio/page';
 import { Processo } from 'src/app/dominio/processo';
 import { CategoriaDocumentoService } from 'src/app/service/categoria-documento.service';
 import { DocumentoService } from 'src/app/service/documento.service';
+import { DialogSalvarDocumentoComponent } from './dialog-salvar-documento/dialog-salvar-documento.component';
+import { DialogVizualizarDocumentoComponent } from './dialog-vizualizar-documento/dialog-vizualizar-documento.component';
 
 @Component({
   selector: 'app-documento-processo',
@@ -22,7 +24,8 @@ export class DocumentoProcessoComponent implements OnChanges {
 
   constructor(
     private categoriaDocumentoService: CategoriaDocumentoService,
-    private documentoService: DocumentoService
+    private documentoService: DocumentoService,
+    private matDialog: MatDialog
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -43,15 +46,30 @@ export class DocumentoProcessoComponent implements OnChanges {
   }
 
   public adicionarDocumento(): void {
+    const dialogRef = this.matDialog.open(DialogSalvarDocumentoComponent, {
+      width: '600px',
+      data: { processo: this.processo }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.initCategoriaDocumentos();
+      }
+    });
   }
 
   public findByProcessoIdAndCategoriaId(categoriaId: number): Observable<Documento[]> {
     return this.documentoService.findByProcessoIdAndCategoriaId(this.processo.id, categoriaId);
   }
 
-  public visualizarDocumento(documentoId: number): void {
+  public visualizarDocumento(event, documento: Documento): void {
+    event.preventDefault();
 
+    this.matDialog.open(DialogVizualizarDocumentoComponent, {
+      width: '800px',
+      height: '600px',
+      data: { documento }
+    });
   }
 
 }

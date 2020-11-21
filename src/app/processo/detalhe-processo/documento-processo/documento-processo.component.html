@@ -15,11 +15,17 @@
                 </mat-expansion-panel-header>
 
                 <mat-list *ngIf="(mapaDocumentoObservable[categoria.id] | async) as documentos">
-                    <mat-list-item *ngFor="let documento of documentos">
-                        <mat-icon mat-list-icon>folder</mat-icon>
-                        <div mat-line> <a (click)="visualizarDocumento(documento.id)">{{documento.nome}}</a> </div>
-                        <div mat-line> {{documento.dataInsercao}} </div>
-                    </mat-list-item>
+                    <ng-container *ngFor="let documento of documentos">
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>folder</mat-icon>
+                            <div mat-line>
+                                <a href="" (click)="visualizarDocumento($event, documento)">
+                                    {{documento.nome}}
+                                </a>
+                            </div>
+                            <div mat-line> {{documento.dataInsercao}} </div>
+                        </mat-list-item>
+                    </ng-container>
                 </mat-list>
 
             </mat-expansion-panel>
