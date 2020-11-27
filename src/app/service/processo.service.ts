@@ -7,6 +7,7 @@ import { Page } from '../dominio/page';
 import { Pageable } from '../dominio/pageable';
 
 import { Processo } from '../dominio/processo';
+import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from '../dominio/constantes';
 
 @Injectable()
 export class ProcessoService {
@@ -27,8 +28,8 @@ export class ProcessoService {
         const params: HttpParams = new HttpParams({
             fromObject: {
                 nome: nome ? nome : '',
-                pageNumber: String(pageable ? pageable.pageNumber : 0),
-                pageSize: String(pageable ? pageable.pageSize : 10),
+                pageNumber: String(pageable ? pageable.pageNumber : DEFAULT_PAGE_NUMBER),
+                pageSize: String(pageable ? pageable.pageSize : DEFAULT_PAGE_SIZE),
             }
         });
 

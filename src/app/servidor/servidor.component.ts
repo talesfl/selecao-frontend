@@ -1,7 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { Page } from '../dominio/page';
 
 import { Servidor } from '../dominio/servidor';
 import { ServidorService } from '../service/servidor.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-servidor',
@@ -28,6 +29,7 @@ export class ServidorComponent implements AfterViewInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private servidorService: ServidorService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngAfterViewInit(): void {
@@ -40,24 +42,26 @@ export class ServidorComponent implements AfterViewInit, OnDestroy {
   }
 
   private subscribeToPageChangesEvent(): Subscription {
-    return this.paginator.page.subscribe((event: PageEvent) => {
-      this.servidorService.findByNomeStartingWith('', {
+    return this.paginator.page.pipe(
+      switchMap((event: PageEvent) => this.servidorService.findByNomeStartingWith('', {
         pageNumber: event.pageIndex,
         pageSize: event.pageSize
-      });
-    });
+      }))
+    ).subscribe((page: Page<Servidor>) => this.updateDataSource(page));
   }
 
   private initDataFromResolver(): void {
     if (this.activatedRoute.snapshot?.data?.page) {
       const page: Page<Servidor> = this.activatedRoute.snapshot.data.page;
-      this.createDataSource(page);
+      this.updateDataSource(page);
     }
   }
 
-  private createDataSource(page: Page<Servidor>): void {
-    this.dataSource = new MatTableDataSource<Servidor>(page.content);
-    this.dataSource.paginator = this.paginator;
+  private updateDataSource(page: Page<Servidor>): void {
+    this.dataSource.data = page.content;
+    this.paginator.pageIndex = page.number;
+    this.paginator.length = page.totalElements;
+    this.changeDetectorRef.detectChanges();
   }
 
 }

@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { SelectionChange, SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { switchMap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
@@ -36,7 +36,8 @@ export class BeneficioComponent implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private beneficioService: BeneficioService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.formGroup = this.formBuilder.group({
       id: [null],
@@ -61,24 +62,26 @@ export class BeneficioComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private subscribeToPageChangesEvent(): Subscription {
-    return this.paginator.page.subscribe((event: PageEvent) => {
-      this.beneficioService.findByNomeStartingWith('', {
+    return this.paginator.page.pipe(
+      switchMap((event: PageEvent) => this.beneficioService.findByNomeStartingWith('', {
         pageNumber: event.pageIndex,
         pageSize: event.pageSize
-      });
-    });
+      }))
+    ).subscribe((page: Page<Beneficio>) => this.updateDataSource(page));
   }
 
   private initDataFromResolver(): void {
     if (this.activatedRoute.snapshot?.data?.page) {
       const page: Page<Beneficio> = this.activatedRoute.snapshot.data.page;
-      this.createDataSource(page);
+      this.updateDataSource(page);
     }
   }
 
-  private createDataSource(page: Page<Beneficio>): void {
-    this.dataSource = new MatTableDataSource<Beneficio>(page.content);
-    this.dataSource.paginator = this.paginator;
+  private updateDataSource(page: Page<Beneficio>): void {
+    this.dataSource.data = page.content;
+    this.paginator.pageIndex = page.number;
+    this.paginator.length = page.totalElements;
+    this.changeDetectorRef.detectChanges();
   }
 
   private _subscribeToselectionChange(): Subscription {
@@ -114,7 +117,7 @@ export class BeneficioComponent implements OnInit, AfterViewInit, OnDestroy {
     observable.pipe(
       switchMap(() => this.beneficioService.findByNomeStartingWith())
     ).subscribe((page: Page<Beneficio>) => {
-      this.createDataSource(page);
+      this.updateDataSource(page);
       this.limpar();
     },
       () => {

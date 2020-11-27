@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { CategoriaDocumento } from '../dominio/categoria-documento';
+import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from '../dominio/constantes';
 import { Page } from '../dominio/page';
 import { Pageable } from '../dominio/pageable';
 
@@ -26,8 +27,8 @@ export class CategoriaDocumentoService {
         const params: HttpParams = new HttpParams({
             fromObject: {
                 nome: nome ? nome : '',
-                pageNumber: String(pageable ? pageable.pageNumber : 0),
-                pageSize: String(pageable ? pageable.pageSize : 10),
+                pageNumber: String(pageable ? pageable.pageNumber : DEFAULT_PAGE_NUMBER),
+                pageSize: String(pageable ? pageable.pageSize : DEFAULT_PAGE_SIZE),
             }
         });
 
